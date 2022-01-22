@@ -11,7 +11,7 @@ import type { MetaFunction, LinksFunction } from "remix";
 import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
+  return { title: "Hailstone steps viewer" };
 };
 
 export const links: LinksFunction = () => {
