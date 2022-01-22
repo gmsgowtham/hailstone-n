@@ -5,7 +5,6 @@ export type LineChartDatum = {
 
 export type LineChartData = Array<{
   id: string | number;
-  color?: string;
   data: Array<LineChartDatum>;
 }>;
 

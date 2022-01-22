@@ -5,8 +5,7 @@ import Header from "../components/header/Header";
 import LineChart from "../components/lineChart/LineChart.client";
 import { LineChartDatum } from "../components/lineChart/types";
 
-const LINE_CHART_NAME = "Hailstone";
-const LINE_CHART_COLOR = "#61cdbb";
+const LINE_CHART_NAME = "Hailstones";
 
 export default function Index() {
   const [lineChartData, updateLineChartData] = useState<Array<LineChartDatum>>(
@@ -104,7 +103,6 @@ export default function Index() {
               data={[
                 {
                   id: LINE_CHART_NAME,
-                  color: LINE_CHART_COLOR,
                   data: lineChartData,
                 },
               ]}
