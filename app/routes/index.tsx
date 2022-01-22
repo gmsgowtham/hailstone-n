@@ -53,8 +53,8 @@ export default function Index() {
   };
 
   return (
-    <div className="h-screen bg-gray-100 overflow-auto">
-      <Header />
+    <div className="relative h-screen bg-gray-100 overflow-auto">
+      <Header sticky />
       <div className="flex flex-col h-full px-4 py-4 md:px-12 md:py-4">
         <div className="flex flex-col-reverse md:flex-row lg:flex-row items-start gap-8 bg-white p-4 border border-1 border-gray-300 rounded">
           <div className="flex flex-col w-full md:w-5/12 shrink-0">
