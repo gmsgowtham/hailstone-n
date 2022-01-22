@@ -53,11 +53,11 @@ export default function Index() {
   };
 
   return (
-    <div className="h-screen bg-gray-100 overflow-auto">
-      <Header />
-      <div className="flex flex-col h-full px-16 py-8">
-        <div className="flex items-start gap-8 bg-white p-4 border border-1 border-gray-300 rounded">
-          <div className="flex flex-col w-5/12 shrink-0">
+    <div className="relative h-screen bg-gray-100 overflow-auto">
+      <Header sticky />
+      <div className="flex flex-col h-full px-4 py-4 md:px-12 md:py-4">
+        <div className="flex flex-col-reverse md:flex-row lg:flex-row items-start gap-8 bg-white p-4 border border-1 border-gray-300 rounded">
+          <div className="flex flex-col w-full md:w-5/12 shrink-0">
             <label
               htmlFor="numberInput"
               className="mb-1 text-gray-700 text-base"
@@ -85,7 +85,7 @@ export default function Index() {
               Draw steps
             </button>
           </div>
-          <div className="text-gray-800 text-base">
+          <div className="text-gray-800 text-sm md:text-base">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
