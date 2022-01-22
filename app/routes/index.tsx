@@ -41,7 +41,7 @@ export default function Index() {
     updateLineChartData([{ x: 1, y: currentValue }]); // reset data with current input
 
     timer = setInterval(() => {
-      if (!isValidInput(currentValue)) {
+      if (currentValue <= 1) {
         clearTimeout(timer);
         return;
       }
