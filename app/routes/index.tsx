@@ -120,7 +120,7 @@ export default function Index() {
             <ResponsiveLine
               data={Object.values(chartData)}
               margin={{ top: 48, right: 48, bottom: 48, left: 48 }}
-              colors={{ scheme: "set1" }}
+              colors={{ scheme: "category10" }}
               xScale={{ type: "linear", min: "auto" }}
               yScale={{ type: "linear", min: "auto" }}
               yFormat=" >-.2f"
