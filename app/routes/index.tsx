@@ -3,7 +3,13 @@ import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
-import useChartStore from "~/store/chart/useChartStore";
+import useChartStore from "../store/chart/useChartStore";
+
+enum ErrorMessages {
+  InvalidInput = "The input is not valid. Accepted inputs 1-100",
+  ChartExists = "The chart for given input is already drawn",
+  MaxCharsReached = "Maximum of only 10 charts can be drawn",
+}
 
 const LINE_CHART_NAME = "Hailstones";
 
@@ -12,9 +18,13 @@ export default function Index() {
     inputValue,
     inProgress,
     chartData,
+    hasError,
+    errorMessage,
     updateInputValue,
     updateChartData,
     toggleProgress,
+    setErrorMessage,
+    clearErrorMessage,
   } = useChartStore((state) => state);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,12 +52,22 @@ export default function Index() {
 
   const onCalculateButtonClick = () => {
     let currentValue = parseInt(inputValue);
-    if (!isValidInput(currentValue)) return;
+    if (!isValidInput(currentValue)) {
+      setErrorMessage(ErrorMessages.InvalidInput);
+      return;
+    }
 
     const chartID = getChartId(inputValue);
-    if (hasExistingChart(chartID)) return;
-    if (Object.keys(chartData).length === 10) return;
+    if (hasExistingChart(chartID)) {
+      setErrorMessage(ErrorMessages.ChartExists);
+      return;
+    }
+    if (Object.keys(chartData).length === 10) {
+      setErrorMessage(ErrorMessages.MaxCharsReached);
+      return;
+    }
 
+    clearErrorMessage();
     toggleProgress();
     updateChartData(chartID, currentValue);
 
@@ -97,6 +117,7 @@ export default function Index() {
             >
               Draw steps
             </button>
+            {hasError ? <span className="block mt-1 text-red-500 text-sm">{errorMessage}</span> : null}
           </div>
           <div className="text-gray-800 text-sm md:text-base">
             <blockquote className="px-4 py-2 bg-gradient-to-r from-cyan-300 to-blue-300 rounded">

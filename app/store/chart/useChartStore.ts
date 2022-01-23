@@ -41,6 +41,8 @@ const useChartStore = create<ChartState>((set) => ({
     }),
   setErrorMessage: (errorMessage: string) =>
     set((state) => ({ ...state, errorMessage, hasError: true })),
+  clearErrorMessage: () =>
+    set((state) => ({ ...state, hasError: false, errorMessage: "" })),
 }));
 
 export default useChartStore;

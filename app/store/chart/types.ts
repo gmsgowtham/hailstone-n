@@ -24,4 +24,5 @@ export type ChartState = {
   updateInputValue: Function;
   updateChartData: Function;
   setErrorMessage: Function;
+  clearErrorMessage: Function;
 };
