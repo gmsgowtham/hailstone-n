@@ -12,7 +12,8 @@ export default function Index() {
     []
   );
 
-  const [inputValue, updateInputValue] = useState("");
+  const [inputValue, updateInputValue] = useState<string>("");
+  const [btnDisabled, toggleButtonDisable] = useState<boolean>(false);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const n = event.target.value || "";
@@ -37,11 +38,14 @@ export default function Index() {
 
     if (!isValidInput(currentValue)) return;
 
+    toggleButtonDisable((prevState) => !!!prevState);
+
     updateLineChartData([{ x: 1, y: currentValue }]); // reset data with current input
 
     timer = setInterval(() => {
       if (currentValue <= 1) {
         clearTimeout(timer);
+        toggleButtonDisable((prevState) => !!!prevState);
         return;
       }
 
@@ -78,23 +82,35 @@ export default function Index() {
               numbers
             </span>
             <button
-              className="bg-blue-500 mt-4 p-3 text-white text-lg uppercase rounded-full"
+              className="bg-blue-600 mt-4 p-3 text-white text-lg uppercase rounded-full disabled:opacity-30 disabled:pointer-events-none"
               type="button"
               onClick={onCalculateButtonClick}
+              disabled={btnDisabled}
             >
               Draw steps
             </button>
           </div>
           <div className="text-gray-800 text-sm md:text-base">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            <blockquote className="px-4 py-2 bg-gradient-to-r from-cyan-300 to-blue-300 rounded">
+              The conjecture is named after Lothar Collatz, who introduced the
+              idea in 1937, two years after receiving his doctorate. It is also
+              known as the 3n + 1 problem, the 3n + 1 conjecture, the Ulam
+              conjecture (after Stanisław Ulam), Kakutani's problem (after
+              Shizuo Kakutani), the Thwaites conjecture (after Sir Bryan
+              Thwaites), Hasse's algorithm (after Helmut Hasse), or the Syracuse
+              problem. The sequence of numbers involved is sometimes referred to
+              as the hailstone sequence or hailstone numbers (because the values
+              are usually subject to multiple descents and ascents like
+              hailstones in a cloud), or as wondrous numbers.
+              <a
+                href="https://en.wikipedia.org/wiki/Collatz_conjecture"
+                rel="nofollow"
+                target="_blank"
+                className="block mt-2 underline text-blue-600"
+              >
+                Ref: Collatz conjecture
+              </a>
+            </blockquote>
           </div>
         </div>
         <div className="mt-4 flex-1 bg-white p-4 border border-1 border-gray-300 rounded">
