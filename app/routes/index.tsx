@@ -3,18 +3,26 @@ import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
+import { object } from "prop-types";
 
 type LineChartDatum = {
   x: number | string | Date;
   y: number | string | Date;
 };
 
+type LineChartData = {
+  id: string;
+  data: Array<LineChartDatum>;
+};
+
+type LineChartStateData = {
+  [key: string]: LineChartData;
+};
+
 const LINE_CHART_NAME = "Hailstones";
 
 export default function Index() {
-  const [lineChartData, updateLineChartData] = useState<Array<LineChartDatum>>(
-    []
-  );
+  const [lineChartData, updateLineChartData] = useState<LineChartStateData>({});
 
   const [inputValue, updateInputValue] = useState<string>("0");
   const [btnDisabled, toggleButtonDisable] = useState<boolean>(false);
@@ -35,17 +43,45 @@ export default function Index() {
     return !!!(isNaN(n) || n <= 1 || n > 100);
   };
 
+  const getUpdateChartValue = (
+    prevState: LineChartStateData,
+    chartId: string,
+    y: number | string | Date
+  ): LineChartStateData => {
+    if (!prevState[chartId]) {
+      return {
+        ...prevState,
+        [chartId]: {
+          id: chartId,
+          data: [{ y, x: 1 }],
+        },
+      };
+    }
+
+    let { id, data } = prevState[chartId];
+    return {
+      ...prevState,
+      [id]: {
+        id,
+        data: [...data, { y, x: data.length + 1 }],
+      },
+    };
+  };
+
   const onCalculateButtonClick = () => {
-    let timer: NodeJS.Timeout;
-
     let currentValue = parseInt(inputValue);
-
     if (!isValidInput(currentValue)) return;
+    if (Object.keys(lineChartData).length === 10) return;
 
     toggleButtonDisable((prevState) => !!!prevState);
 
-    updateLineChartData([{ x: 1, y: currentValue }]); // reset data with current input
+    const chartID = `${LINE_CHART_NAME} - ${inputValue}`;
 
+    updateLineChartData((prevState) => {
+      return getUpdateChartValue(prevState, chartID, currentValue);
+    });
+
+    let timer: NodeJS.Timeout;
     timer = setInterval(() => {
       if (currentValue <= 1) {
         clearTimeout(timer);
@@ -54,8 +90,8 @@ export default function Index() {
       }
 
       currentValue = hailStoneCalculation(currentValue);
-      updateLineChartData((prevData) => {
-        return [...prevData, { x: prevData.length + 1, y: currentValue }];
+      updateLineChartData((prevState) => {
+        return getUpdateChartValue(prevState, chartID, currentValue);
       });
     }, 750);
   };
@@ -120,22 +156,11 @@ export default function Index() {
         <div className="mt-4 flex-1 bg-white p-4 border border-1 border-gray-300 rounded">
           <ClientOnly>
             <ResponsiveLine
-              data={[
-                {
-                  id: LINE_CHART_NAME,
-                  data: lineChartData,
-                },
-              ]}
+              data={Object.values(lineChartData)}
               margin={{ top: 48, right: 48, bottom: 48, left: 48 }}
               colors={{ scheme: "set1" }}
-              xScale={{ type: "point" }}
-              yScale={{
-                type: "linear",
-                min: "auto",
-                max: "auto",
-                stacked: true,
-                reverse: false,
-              }}
+              xScale={{ type: "linear", min: "auto" }}
+              yScale={{ type: "linear", min: "auto" }}
               yFormat=" >-.2f"
               axisTop={null}
               axisRight={null}
@@ -170,7 +195,7 @@ export default function Index() {
                   translateY: -48,
                   itemsSpacing: 0,
                   itemDirection: "left-to-right",
-                  itemWidth: 80,
+                  itemWidth: 100,
                   itemHeight: 20,
                   itemOpacity: 1,
                   symbolSize: 12,
