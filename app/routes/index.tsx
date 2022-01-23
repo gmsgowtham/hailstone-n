@@ -73,10 +73,10 @@ export default function Index() {
     if (!isValidInput(currentValue)) return;
     if (Object.keys(lineChartData).length === 10) return;
 
-    toggleButtonDisable((prevState) => !!!prevState);
-
     const chartID = `${LINE_CHART_NAME} - ${inputValue}`;
+    if (lineChartData[chartID]) return;
 
+    toggleButtonDisable((prevState) => !!!prevState);
     updateLineChartData((prevState) => {
       return getUpdateChartValue(prevState, chartID, currentValue);
     });
