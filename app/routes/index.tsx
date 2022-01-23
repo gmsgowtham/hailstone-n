@@ -1,9 +1,13 @@
 import { ChangeEvent, useState } from "react";
 import { ClientOnly } from "remix-utils";
+import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
-import LineChart from "../components/lineChart/LineChart.client";
-import { LineChartDatum } from "../components/lineChart/types";
+
+type LineChartDatum = {
+  x: number | string | Date;
+  y: number | string | Date;
+};
 
 const LINE_CHART_NAME = "Hailstones";
 
@@ -12,7 +16,7 @@ export default function Index() {
     []
   );
 
-  const [inputValue, updateInputValue] = useState<string>("");
+  const [inputValue, updateInputValue] = useState<string>("0");
   const [btnDisabled, toggleButtonDisable] = useState<boolean>(false);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -115,11 +119,72 @@ export default function Index() {
         </div>
         <div className="mt-4 flex-1 bg-white p-4 border border-1 border-gray-300 rounded">
           <ClientOnly>
-            <LineChart
+            <ResponsiveLine
               data={[
                 {
                   id: LINE_CHART_NAME,
                   data: lineChartData,
+                },
+              ]}
+              margin={{ top: 48, right: 48, bottom: 48, left: 48 }}
+              colors={{ scheme: "set1" }}
+              xScale={{ type: "point" }}
+              yScale={{
+                type: "linear",
+                min: "auto",
+                max: "auto",
+                stacked: true,
+                reverse: false,
+              }}
+              yFormat=" >-.2f"
+              axisTop={null}
+              axisRight={null}
+              axisBottom={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: "Steps",
+                legendOffset: 36,
+                legendPosition: "middle",
+              }}
+              axisLeft={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: "Number",
+                legendOffset: -40,
+                legendPosition: "middle",
+              }}
+              pointSize={10}
+              pointColor={{ theme: "background" }}
+              pointBorderWidth={2}
+              pointBorderColor={{ from: "serieColor" }}
+              pointLabelYOffset={-12}
+              useMesh={true}
+              legends={[
+                {
+                  anchor: "top-left",
+                  direction: "row",
+                  justify: false,
+                  translateX: 0,
+                  translateY: -48,
+                  itemsSpacing: 0,
+                  itemDirection: "left-to-right",
+                  itemWidth: 80,
+                  itemHeight: 20,
+                  itemOpacity: 1,
+                  symbolSize: 12,
+                  symbolShape: "circle",
+                  symbolBorderColor: "transparent",
+                  effects: [
+                    {
+                      on: "hover",
+                      style: {
+                        itemBackground: "rgba(0, 0, 0, .03)",
+                        itemOpacity: 1,
+                      },
+                    },
+                  ],
                 },
               ]}
             />
