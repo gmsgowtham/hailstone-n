@@ -9,3 +9,6 @@ api/_build
 
 # Ignore auto generated tailwind css
 app/tailwind.css
+
+# Eslint
+.eslintcache
