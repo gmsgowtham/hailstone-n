@@ -12,7 +12,8 @@ export default function Index() {
     []
   );
 
-  const [inputValue, updateInputValue] = useState("");
+  const [inputValue, updateInputValue] = useState<string>("");
+  const [btnDisabled, toggleButtonDisable] = useState<boolean>(false);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const n = event.target.value || "";
@@ -37,11 +38,14 @@ export default function Index() {
 
     if (!isValidInput(currentValue)) return;
 
+    toggleButtonDisable((prevState) => !!!prevState);
+
     updateLineChartData([{ x: 1, y: currentValue }]); // reset data with current input
 
     timer = setInterval(() => {
       if (currentValue <= 1) {
         clearTimeout(timer);
+        toggleButtonDisable((prevState) => !!!prevState);
         return;
       }
 
@@ -78,9 +82,10 @@ export default function Index() {
               numbers
             </span>
             <button
-              className="bg-blue-500 mt-4 p-3 text-white text-lg uppercase rounded-full"
+              className="bg-blue-600 mt-4 p-3 text-white text-lg uppercase rounded-full disabled:opacity-30 disabled:pointer-events-none"
               type="button"
               onClick={onCalculateButtonClick}
+              disabled={btnDisabled}
             >
               Draw steps
             </button>
