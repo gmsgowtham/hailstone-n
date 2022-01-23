@@ -3,7 +3,7 @@ import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
-import useChartStore from "~/store/chart";
+import useChartStore from "~/store/chart/useChartStore";
 
 const LINE_CHART_NAME = "Hailstones";
 

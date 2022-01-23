@@ -1,34 +1,13 @@
 import create from "zustand";
 
-type LinePointData = number | string | Date;
-
-type LineChartDatum = {
-  x: LinePointData;
-  y: LinePointData;
-};
-
-type LineChartData = {
-  id: string;
-  data: Array<LineChartDatum>;
-};
-
-type LineChartStateData = {
-  [key: string]: LineChartData;
-};
-
-type ChartState = {
-  inProgress: boolean;
-  inputValue: string;
-  chartData: LineChartStateData;
-  toggleProgress: Function;
-  updateInputValue: Function;
-  updateChartData: Function;
-};
+import { ChartState, LinePointData } from "./types";
 
 const useChartStore = create<ChartState>((set) => ({
   inProgress: false,
   inputValue: "",
   chartData: {},
+  errorMessage: "",
+  hasError: false,
   toggleProgress: () =>
     set((state) => ({ ...state, inProgress: !state.inProgress })),
   updateInputValue: (value: string) =>
@@ -60,6 +39,8 @@ const useChartStore = create<ChartState>((set) => ({
         },
       };
     }),
+  setErrorMessage: (errorMessage: string) =>
+    set((state) => ({ ...state, errorMessage, hasError: true })),
 }));
 
 export default useChartStore;
