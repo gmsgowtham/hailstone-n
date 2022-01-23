@@ -3,7 +3,6 @@ import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
-import { object } from "prop-types";
 
 type LineChartDatum = {
   x: number | string | Date;
@@ -40,7 +39,7 @@ export default function Index() {
   };
 
   const isValidInput = (n: number): boolean => {
-    return !!!(isNaN(n) || n <= 1 || n > 100);
+    return !(isNaN(n) || n <= 1 || n > 100);
   };
 
   const getUpdateChartValue = (
@@ -76,7 +75,7 @@ export default function Index() {
     const chartID = `${LINE_CHART_NAME} - ${inputValue}`;
     if (lineChartData[chartID]) return;
 
-    toggleButtonDisable((prevState) => !!!prevState);
+    toggleButtonDisable((prevState) => !prevState);
     updateLineChartData((prevState) => {
       return getUpdateChartValue(prevState, chartID, currentValue);
     });
@@ -85,7 +84,7 @@ export default function Index() {
     timer = setInterval(() => {
       if (currentValue <= 1) {
         clearTimeout(timer);
-        toggleButtonDisable((prevState) => !!!prevState);
+        toggleButtonDisable((prevState) => !prevState);
         return;
       }
 
@@ -144,7 +143,7 @@ export default function Index() {
               hailstones in a cloud), or as wondrous numbers.
               <a
                 href="https://en.wikipedia.org/wiki/Collatz_conjecture"
-                rel="nofollow"
+                rel="nofollow noreferrer"
                 target="_blank"
                 className="block mt-2 underline text-blue-600"
               >
