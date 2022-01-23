@@ -3,28 +3,12 @@ import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
 import Header from "../components/header/Header";
-
-type LineChartDatum = {
-  x: number | string | Date;
-  y: number | string | Date;
-};
-
-type LineChartData = {
-  id: string;
-  data: Array<LineChartDatum>;
-};
-
-type LineChartStateData = {
-  [key: string]: LineChartData;
-};
+import useChartStore from "~/store/chart";
 
 const LINE_CHART_NAME = "Hailstones";
 
 export default function Index() {
-  const [lineChartData, updateLineChartData] = useState<LineChartStateData>({});
-
-  const [inputValue, updateInputValue] = useState<string>("0");
-  const [btnDisabled, toggleButtonDisable] = useState<boolean>(false);
+  const { inputValue, inProgress, chartData, updateInputValue, updateChartData, toggleProgress } = useChartStore(state => state);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const n = event.target.value || "";
@@ -42,57 +26,36 @@ export default function Index() {
     return !(isNaN(n) || n <= 1 || n > 100);
   };
 
-  const getUpdateChartValue = (
-    prevState: LineChartStateData,
-    chartId: string,
-    y: number | string | Date
-  ): LineChartStateData => {
-    if (!prevState[chartId]) {
-      return {
-        ...prevState,
-        [chartId]: {
-          id: chartId,
-          data: [{ y, x: 1 }],
-        },
-      };
-    }
+  const hasExistingChart = (chartID: string) => {
+    return !!chartData[chartID]
+  }
 
-    let { id, data } = prevState[chartId];
-    return {
-      ...prevState,
-      [id]: {
-        id,
-        data: [...data, { y, x: data.length + 1 }],
-      },
-    };
-  };
+  const getChartId = (suffix: string) => {
+    return `${LINE_CHART_NAME} - ${suffix}`;
+  }
 
   const onCalculateButtonClick = () => {
     let currentValue = parseInt(inputValue);
     if (!isValidInput(currentValue)) return;
-    if (Object.keys(lineChartData).length === 10) return;
 
-    const chartID = `${LINE_CHART_NAME} - ${inputValue}`;
-    if (lineChartData[chartID]) return;
+    const chartID = getChartId(inputValue);
+    if (hasExistingChart(chartID)) return;
+    if (Object.keys(chartData).length === 10) return;
 
-    toggleButtonDisable((prevState) => !prevState);
-    updateLineChartData((prevState) => {
-      return getUpdateChartValue(prevState, chartID, currentValue);
-    });
+    toggleProgress();
+    updateChartData(chartID, currentValue);
 
     let timer: NodeJS.Timeout;
     timer = setInterval(() => {
       if (currentValue <= 1) {
         clearTimeout(timer);
-        toggleButtonDisable((prevState) => !prevState);
+        toggleProgress();
         return;
       }
 
       currentValue = hailStoneCalculation(currentValue);
-      updateLineChartData((prevState) => {
-        return getUpdateChartValue(prevState, chartID, currentValue);
-      });
-    }, 750);
+      updateChartData(chartID, currentValue);
+    }, 500);
   };
 
   return (
@@ -124,7 +87,7 @@ export default function Index() {
               className="bg-blue-600 mt-4 p-3 text-white text-lg uppercase rounded-full disabled:opacity-30 disabled:pointer-events-none"
               type="button"
               onClick={onCalculateButtonClick}
-              disabled={btnDisabled}
+              disabled={inProgress}
             >
               Draw steps
             </button>
@@ -155,7 +118,7 @@ export default function Index() {
         <div className="mt-4 flex-1 bg-white p-4 border border-1 border-gray-300 rounded">
           <ClientOnly>
             <ResponsiveLine
-              data={Object.values(lineChartData)}
+              data={Object.values(chartData)}
               margin={{ top: 48, right: 48, bottom: 48, left: 48 }}
               colors={{ scheme: "set1" }}
               xScale={{ type: "linear", min: "auto" }}
