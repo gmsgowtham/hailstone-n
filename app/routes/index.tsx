@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { ClientOnly } from "remix-utils";
 import { ResponsiveLine } from "@nivo/line";
 
@@ -8,11 +8,17 @@ import useChartStore from "~/store/chart";
 const LINE_CHART_NAME = "Hailstones";
 
 export default function Index() {
-  const { inputValue, inProgress, chartData, updateInputValue, updateChartData, toggleProgress } = useChartStore(state => state);
+  const {
+    inputValue,
+    inProgress,
+    chartData,
+    updateInputValue,
+    updateChartData,
+    toggleProgress,
+  } = useChartStore((state) => state);
 
   const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const n = event.target.value || "";
-    updateInputValue(n);
+    updateInputValue(event.target.value || "");
   };
 
   const hailStoneCalculation = (n: number) => {
@@ -27,12 +33,12 @@ export default function Index() {
   };
 
   const hasExistingChart = (chartID: string) => {
-    return !!chartData[chartID]
-  }
+    return !!chartData[chartID];
+  };
 
   const getChartId = (suffix: string) => {
     return `${LINE_CHART_NAME} - ${suffix}`;
-  }
+  };
 
   const onCalculateButtonClick = () => {
     let currentValue = parseInt(inputValue);
