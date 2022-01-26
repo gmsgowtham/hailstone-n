@@ -11,7 +11,7 @@ import type { MetaFunction, LinksFunction } from "remix";
 import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => {
-  return { title: "Hailstone steps viewer" };
+  return { title: "Collatz_conjecture | Hailstones viewer" };
 };
 
 export const links: LinksFunction = () => {

@@ -15,7 +15,7 @@ const Header = ({ sticky = false }: HeaderProps) => {
           href="/"
           className="block font-medium text-2xl md:text-3xl text-gray-800"
         >
-          Hailstone {"{N}"}
+          Hailstones {"{N}"}
         </a>
       </div>
     </header>
